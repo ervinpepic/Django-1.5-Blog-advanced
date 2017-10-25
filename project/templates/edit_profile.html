@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script src="{{STATIC_URL}}ckeditor/ckeditor.js"></script>
+<h2>{{ user.username }}'s Profile</h2>
+
+<form role="form" method="post" action="">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Edit">
+</form>
+<script>
+  CKEDITOR.replace( '.richtexteditor' );
+</script>
+{% endblock %}

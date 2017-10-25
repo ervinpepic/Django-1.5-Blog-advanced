@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load comments %}
+{% block content %}
+{% if is_paginated %}
+<ul class="post-title" start="{{ page_obj.start_index }}">
+{% else %}
+<ul>
+{% endif %}
+{% for link in object_list %}
+<br>	
+ {{ object.description }}
+  {{ object.body }}
+  {{ form.media }}
+  {{ form.as_p }}
+	<div class="container-fluid">
+	        <div class="row">
+	            <div class="col-md-8 col-md-offset-2 col-md-8 col-md-offset-5">
+	                                   
+
+<form method="post" action="{% url 'vote' %}" class="vote_form">
+	<lI>[{{ link.votes }}]
+		{% csrf_token %}
+		<input class="post-title"  type="hidden" id="id_link" name="link" class="hidden_id" value="{{ link.pk }}"/>
+		<input type="hidden" id="id_voter" name="voter" class="hidden_id" value="{{ user.pk }}"/>
+		 	
+		{% if not user.is_authenticated %}
+		<button disabled title="Please LogIn to vote">+</button>
+		{% elif link.pk not in voted %}
+		<button type="button" class="btn btn-primary btn-sm pull-right">+</button>
+		{% else %}
+		<button type="button" class="btn btn-success btn-sm pull-right">-</button>
+		{% endif %}
+
+		<a  href ="{% url 'link_detail' pk=link.pk %}">
+			<b>{{ link.title }}</b>
+			{% get_comment_count for link as comment_count %}
+			{{ comment_count }} comment{{ comment_count|pluralize }}
+		</a>
+</li>
+</form>
+</div>
+			</div>
+				</div>
+
+{% endfor %}
+
+
+</ul>	
+{% if is_paginated %}
+<div class="pagination">
+	{% if page_obj.has_next %}
+	<button type="button" class="btn btn-success btn-sm pull-right"> <a href="?page={{ page_obj.next_page_number }}">More &raquo;</a></button>
+	{% endif %}
+</div>
+{% endif %}
+<blockquote style="background-color: #ddd; padding: 4px; border-radius: 10px; margin: 10px 0; color: #666;
+font-size: smaller; text-shadow: rgba(255,255,255,0.8) 1px 1px 0;">
+{{ randomquip.comment|truncatechars:140 }}
+ </blockquote>
+{% endblock %}
